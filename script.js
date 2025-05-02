@@ -302,7 +302,7 @@ function updateModeButtonsState() {
 
 const modeSelectScreen = document.getElementById('mode-select-screen');
 const selectedScaleLabel = document.getElementById('selected-scale-label');
-const backToScaleSelect = document.getElementById('back-to-scale-select');
+const ToScaleSelect = document.getElementById('-to-scale-select');
 
 document.querySelectorAll('.scale-select').forEach(btn => {
   btn.addEventListener('click', () => {
@@ -329,14 +329,14 @@ document.querySelectorAll('.mode-button').forEach(btn => {
   });
 });
 
-backToScaleSelect.addEventListener('click', () => {
+ToScaleSelect.addEventListener('click', () => {
   modeSelectScreen.classList.add('hidden');
   startScreen.classList.remove('hidden');
 });
 
 backButton.addEventListener('click', () => {
   gameScreen.classList.add('hidden');
-  startScreen.classList.remove('hidden');
+  modeselectScreen.classList.remove('hidden');
 });
 
 playRefBtn.addEventListener('click', () => playNote(scaleData[currentScale].referenceNote));
