@@ -267,7 +267,7 @@ document.addEventListener('DOMContentLoaded', () => {
       btn.textContent = showDegrees
         ? (currentMode === 8 && note === data.noteOrder[0] ? '1st/8th' : data.degreeMap[note])
         : note;
-      btn.classList.toggle('wide-label', currentMode === 8 && note === data.noteOrder[0]);
+btn.classList.toggle('wide-label', showDegrees && currentMode === 8 && note === data.noteOrder[0]);
     });
   }
 
