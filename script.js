@@ -62,7 +62,7 @@ document.addEventListener('DOMContentLoaded', () => {
       octave: 'Notes D3–D4'
     },
     "A": {
-      noteMap: { "A": ['a3'], "B": ['b3'], "C#": ['c#4'], "D": ['d4'], "E": ['e4'], "F#": ['f#4'], "G#": ['g#4'] },
+      noteMap: { "A": ['a3', 'a4'], "B": ['b3'], "C#": ['c#4'], "D": ['d4'], "E": ['e4'], "F#": ['f#4'], "G#": ['g#4'] },
       degreeMap: { "A": '1st', "B": '2nd', "C#": '3rd', "D": '4th', "E": '5th', "F#": '6th', "G#": '7th' },
       noteOrder: ["A", "B", "C#", "D", "E", "F#", "G#"],
       referenceNote: 'a3',
@@ -71,7 +71,7 @@ document.addEventListener('DOMContentLoaded', () => {
       octave: 'Notes A3–A4'
     },
     "E": {
-      noteMap: { "E": ['e3'], "F#": ['f#3'], "G#": ['g#3'], "A": ['a3'], "B": ['b3'], "C#": ['c#4'], "D#": ['d#4'] },
+      noteMap: { "E": ['e3', 'e4'], "F#": ['f#3'], "G#": ['g#3'], "A": ['a3'], "B": ['b3'], "C#": ['c#4'], "D#": ['d#4'] },
       degreeMap: { "E": '1st', "F#": '2nd', "G#": '3rd', "A": '4th', "B": '5th', "C#": '6th', "D#": '7th' },
       noteOrder: ["E", "F#", "G#", "A", "B", "C#", "D#"],
       referenceNote: 'e3',
@@ -80,7 +80,7 @@ document.addEventListener('DOMContentLoaded', () => {
       octave: 'Notes E3–E4'
     },
     "F": {
-      noteMap: { "F": ['f3'], "G": ['g3'], "A": ['a3'], "Bb": ['a#3'], "C": ['c4'], "D": ['d4'], "E": ['e4'] },
+      noteMap: { "F": ['f3', 'f4'], "G": ['g3'], "A": ['a3'], "Bb": ['a#3'], "C": ['c4'], "D": ['d4'], "E": ['e4'] },
       degreeMap: { "F": '1st', "G": '2nd', "A": '3rd', "Bb": '4th', "C": '5th', "D": '6th', "E": '7th' },
       noteOrder: ["F", "G", "A", "Bb", "C", "D", "E"],
       referenceNote: 'f3',
@@ -89,7 +89,7 @@ document.addEventListener('DOMContentLoaded', () => {
       octave: 'Notes F3–F4'
     },
     "Bb": {
-      noteMap: { "Bb": ['a#3'], "C": ['c4'], "D": ['d4'], "Eb": ['d#4'], "F": ['f4'], "G": ['g4'], "A": ['a4'] },
+      noteMap: { "Bb": ['a#3', 'a#4'], "C": ['c4'], "D": ['d4'], "Eb": ['d#4'], "F": ['f4'], "G": ['g4'], "A": ['a4'] },
       degreeMap: { "Bb": '1st', "C": '2nd', "D": '3rd', "Eb": '4th', "F": '5th', "G": '6th', "A": '7th' },
       noteOrder: ["Bb", "C", "D", "Eb", "F", "G", "A"],
       referenceNote: 'a#3',
@@ -98,7 +98,7 @@ document.addEventListener('DOMContentLoaded', () => {
       octave: 'Notes Bb3–Bb4'
     },
     "Eb": {
-      noteMap: { "Eb": ['d#3'], "F": ['f3'], "G": ['g3'], "Ab": ['g#3'], "Bb": ['a#3'], "C": ['c4'], "D": ['d4'] },
+      noteMap: { "Eb": ['d#3', 'd#4'], "F": ['f3'], "G": ['g3'], "Ab": ['g#3'], "Bb": ['a#3'], "C": ['c4'], "D": ['d4'] },
       degreeMap: { "Eb": '1st', "F": '2nd', "G": '3rd', "Ab": '4th', "Bb": '5th', "C": '6th', "D": '7th' },
       noteOrder: ["Eb", "F", "G", "Ab", "Bb", "C", "D"],
       referenceNote: 'd#3',
@@ -107,7 +107,7 @@ document.addEventListener('DOMContentLoaded', () => {
       octave: 'Notes Eb3–Eb4'
     },
     "Ab": {
-      noteMap: { "Ab": ['g#3'], "Bb": ['a#3'], "C": ['c4'], "Db": ['c#4'], "Eb": ['d#4'], "F": ['f4'], "G": ['g4'] },
+      noteMap: { "Ab": ['g#3', 'g#4'], "Bb": ['a#3'], "C": ['c4'], "Db": ['c#4'], "Eb": ['d#4'], "F": ['f4'], "G": ['g4'] },
       degreeMap: { "Ab": '1st', "Bb": '2nd', "C": '3rd', "Db": '4th', "Eb": '5th', "F": '6th', "G": '7th' },
       noteOrder: ["Ab", "Bb", "C", "Db", "Eb", "F", "G"],
       referenceNote: 'g#3',
@@ -116,7 +116,7 @@ document.addEventListener('DOMContentLoaded', () => {
       octave: 'Notes Ab3–Ab4'
     },
     "B": {
-      noteMap: { "B": ['b3'], "C#": ['c#4'], "D#": ['d#4'], "E": ['e4'], "F#": ['f#4'], "G#": ['g#4'], "A#": ['a#4'] },
+      noteMap: { "B": ['b3', 'b4'], "C#": ['c#4'], "D#": ['d#4'], "E": ['e4'], "F#": ['f#4'], "G#": ['g#4'], "A#": ['a#4'] },
       degreeMap: { "B": '1st', "C#": '2nd', "D#": '3rd', "E": '4th', "F#": '5th', "G#": '6th', "A#": '7th' },
       noteOrder: ["B", "C#", "D#", "E", "F#", "G#", "A#"],
       referenceNote: 'b3',
@@ -125,7 +125,7 @@ document.addEventListener('DOMContentLoaded', () => {
       octave: 'Notes B3–B4'
     },
     "F#": {
-      noteMap: { "F#": ['f#3'], "G#": ['g#3'], "A#": ['a#3'], "B": ['b3'], "C#": ['c#4'], "D#": ['d#4'], "E#": ['f4'] },
+      noteMap: { "F#": ['f#3', 'f#4'], "G#": ['g#3'], "A#": ['a#3'], "B": ['b3'], "C#": ['c#4'], "D#": ['d#4'], "E#": ['f4'] },
       degreeMap: { "F#": '1st', "G#": '2nd', "A#": '3rd', "B": '4th', "C#": '5th', "D#": '6th', "E#": '7th' },
       noteOrder: ["F#", "G#", "A#", "B", "C#", "D#", "E#"],
       referenceNote: 'f#3',
