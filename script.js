@@ -154,6 +154,17 @@ document.addEventListener('DOMContentLoaded', () => {
   const noteKey = noteNames[0];
   const associatedNotes = scaleData[currentScale].noteMap[noteKey];
 
+    function updateNoteRangeDisplay() {
+  const display = document.getElementById('note-range-display');
+  const noteNames = scaleData[currentScale].noteOrder.slice(0, currentMode);
+  const firstKey = noteNames[0];
+  const lastKey = noteNames[noteNames.length - 1];
+  const firstNoteFile = scaleData[currentScale].noteMap[firstKey][0];
+  const lastNoteFile = scaleData[currentScale].noteMap[lastKey][0];
+  display.textContent = `Current note range: ${firstNoteFile.toUpperCase()}–${lastNoteFile.toUpperCase()}`;
+}
+
+
   if (currentMode === 8 && associatedNotes.length === 2) {
     const [note1, note2] = associatedNotes;
     return `${scaleData[currentScale].octave} — the ${noteKey} button works for both ${note1.toUpperCase()} and ${note2.toUpperCase()}!`;
