@@ -149,12 +149,11 @@ document.addEventListener('DOMContentLoaded', () => {
     audio.play();
   }
 
-function generateNoteRangeText() {
+  function generateNoteRangeText() {
   const noteNames = scaleData[currentScale].noteOrder.slice(0, currentMode);
   const noteKey = noteNames[0];
   const associatedNotes = scaleData[currentScale].noteMap[noteKey];
 
-  // If Entire Octave mode and C has two audio files (e.g. c4 and c5)
   if (currentMode === 8 && associatedNotes.length === 2) {
     const [note1, note2] = associatedNotes;
     return `${scaleData[currentScale].octave} — the ${noteKey} button works for both ${note1.toUpperCase()} and ${note2.toUpperCase()}!`;
@@ -163,8 +162,7 @@ function generateNoteRangeText() {
   const formattedList = noteNames.length === 2
     ? `${noteNames[0]} and ${noteNames[1]}`
     : `${noteNames.slice(0, -1).join(', ')} and ${noteNames[noteNames.length - 1]}`;
-
-  return `${scaleData[currentScale].octave} — Notes ${formattedList}`;
+  return `Notes ${formattedList} from one octave`;
 }
 
   function getNoteName(filename, scale) {
