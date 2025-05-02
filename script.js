@@ -149,14 +149,16 @@ document.addEventListener('DOMContentLoaded', () => {
     audio.play();
   }
 
-  function generateNoteRangeText() {
-  const scaleInfo = scaleData[currentScale];
-  const noteNames = scaleInfo.noteOrder.slice(0, currentMode);
+function generateNoteRangeText() {
+  const data = scaleData[currentScale];
+  const noteNames = data.noteOrder.slice(0, currentMode);
+  const tonic = noteNames[0]; // First note in the scale
+  const tonicFiles = data.noteMap[tonic];
 
-  if (currentMode === 8) {
-    const tonicName = noteNames[0];
-    const octaveText = scaleInfo.octave;
-    return `${octaveText} — the ${tonicName} button works for both ${scaleInfo.noteMap[tonicName][0].toUpperCase()} and ${scaleInfo.noteMap[tonicName][1] ? scaleInfo.noteMap[tonicName][1].toUpperCase() : 'a second version of ' + tonicName}!`;
+  if (currentMode === 8 && tonicFiles.length === 2) {
+    // Extract octaves from filenames like "ab3" → "3"
+    const [note1, note2] = tonicFiles.map(f => f.match(/\d+/)?.[0]);
+    return `${data.octave} — the ${tonic} button works for both ${tonic}${note1} and ${tonic}${note2}!`;
   }
 
   const formattedList = noteNames.length === 2
