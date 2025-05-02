@@ -150,14 +150,21 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function generateNoteRangeText() {
-  const noteNames = scaleData[currentScale].noteOrder.slice(0, currentMode);
-  const noteKey = noteNames[0];
-  const associatedNotes = scaleData[currentScale].noteMap[noteKey];
+  const scaleInfo = scaleData[currentScale];
+  const noteNames = scaleInfo.noteOrder.slice(0, currentMode);
 
-  if (currentMode === 8 && associatedNotes.length === 2) {
-    const [note1, note2] = associatedNotes;
-    return `${scaleData[currentScale].octave} — the ${noteKey} button works for both ${note1.toUpperCase()} and ${note2.toUpperCase()}!`;
+  if (currentMode === 8) {
+    const tonicName = noteNames[0];
+    const octaveText = scaleInfo.octave;
+    return `${octaveText} — the ${tonicName} button works for both ${scaleInfo.noteMap[tonicName][0].toUpperCase()} and ${scaleInfo.noteMap[tonicName][1] ? scaleInfo.noteMap[tonicName][1].toUpperCase() : 'a second version of ' + tonicName}!`;
   }
+
+  const formattedList = noteNames.length === 2
+    ? `${noteNames[0]} and ${noteNames[1]}`
+    : `${noteNames.slice(0, -1).join(', ')} and ${noteNames[noteNames.length - 1]}`;
+
+  return `Notes ${formattedList} from one octave`;
+}
 
   const formattedList = noteNames.length === 2
     ? `${noteNames[0]} and ${noteNames[1]}`
