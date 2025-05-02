@@ -1,7 +1,6 @@
-// Fixed script.js with all sharp/flat keys quoted
-
 document.addEventListener('DOMContentLoaded', () => {
   const startScreen = document.getElementById('main-menu');
+  const modeSelectScreen = document.getElementById('mode-select-screen');
   const gameScreen = document.getElementById('game-screen');
   const noteButtonsContainer = document.getElementById('note-buttons-container');
   const promptText = document.getElementById('prompt');
@@ -11,6 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const nextBtn = document.getElementById('next-button');
   const resetScoreBtn = document.getElementById('reset-score');
   const backButton = document.getElementById('back-button');
+  const backToScaleSelect = document.getElementById('back-to-scale-select');
   const displayNotesBtn = document.getElementById('display-notes');
   const displayDegreesBtn = document.getElementById('display-degrees');
   const scaleLabel = document.getElementById('scale-label');
@@ -21,6 +21,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const accuracyDisplay = document.getElementById('accuracy');
   const addNoteBtn = document.getElementById('add-note');
   const removeNoteBtn = document.getElementById('remove-note');
+  const selectedScaleLabel = document.getElementById('selected-scale-label');
 
   let audio = new Audio();
   let correct = 0;
@@ -143,225 +144,194 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   };
 
-// === Core Functions ===
+  function playNote(noteFile) {
+    audio.src = `audio/${encodeURIComponent(noteFile)}.mp3`;
+    audio.play();
+  }
 
-function playNote(noteFile) {
-  audio.src = `audio/${encodeURIComponent(noteFile)}.mp3`;
-  audio.play();
-}
   function generateNoteRangeText() {
-  const noteNames = scaleData[currentScale].noteOrder.slice(0, currentMode);
-  if (currentMode === 8 && scaleData[currentScale].noteMap[noteNames[0]].length === 2) {
-    return `One Octave (${scaleData[currentScale].octave}) — the ${noteNames[0]} button works for both notes!`;
-  }
-
-  // Format note list with commas and "and"
-  const formattedList = noteNames.length === 2
-    ? `${noteNames[0]} and ${noteNames[1]}`
-    : `${noteNames.slice(0, -1).join(', ')} and ${noteNames[noteNames.length - 1]}`;
-
-  return `Notes ${formattedList} from one octave`;
-}
-
-function getNoteName(filename, scale) {
-  const reverseMap = {};
-  const map = scaleData[scale].noteMap;
-  for (const [name, files] of Object.entries(map)) {
-    files.forEach(file => reverseMap[file] = name);
-  }
-  return reverseMap[filename] || '';
-}
-function buildNoteButtons() {
-  noteButtonsContainer.innerHTML = '';
-  const data = scaleData[currentScale];
-  const keys = data.noteOrder.slice(0, currentMode);
-  currentNotes = keys.map(key => data.noteMap[key][0]);
-
-  keys.forEach(note => {
-    const btn = document.createElement('button');
-    btn.className = 'blue-button';
-    btn.setAttribute('data-note', note);
-    if (showDegrees) {
-      if (currentMode === 8 && note === data.noteOrder[0]) {
-        btn.textContent = '1st/8th';
-        btn.classList.add('wide-label');
-      } else {
-        btn.textContent = data.degreeMap[note];
-        btn.classList.remove('wide-label');
-      }
-    } else {
-      btn.textContent = note;
-      btn.classList.remove('wide-label');
+    const noteNames = scaleData[currentScale].noteOrder.slice(0, currentMode);
+    if (currentMode === 8 && scaleData[currentScale].noteMap[noteNames[0]].length === 2) {
+      return `One Octave (${scaleData[currentScale].octave}) — the ${noteNames[0]} button works for both notes!`;
     }
-    btn.addEventListener('click', handleAnswer);
-    noteButtonsContainer.appendChild(btn);
-  });
-}
-
-function loadNewNote() {
-  isAnswered = false;
-  buildNoteButtons();
-  const buttons = noteButtonsContainer.querySelectorAll('.blue-button');
-  buttons.forEach(btn => {
-    btn.disabled = false;
-    btn.classList.remove('correct', 'incorrect');
-  });
-
-  const candidates = [...currentNotes];
-  if (currentMode === 8 && scaleData[currentScale].noteMap[scaleData[currentScale].noteOrder[0]].length === 2) {
-    candidates.push(scaleData[currentScale].noteMap[scaleData[currentScale].noteOrder[0]][1]);
+    const formattedList = noteNames.length === 2
+      ? `${noteNames[0]} and ${noteNames[1]}`
+      : `${noteNames.slice(0, -1).join(', ')} and ${noteNames[noteNames.length - 1]}`;
+    return `Notes ${formattedList} from one octave`;
   }
 
-  currentNote = candidates[Math.floor(Math.random() * candidates.length)];
-  playNote(currentNote);
-  promptText.textContent = 'Which note was played?';
-  nextBtn.disabled = true;
-  updateModeButtonsState();
-}
-
-function handleAnswer(e) {
-  if (isAnswered) return;
-  isAnswered = true;
-
-  const selected = e.target.getAttribute('data-note');
-  const correctName = getNoteName(currentNote, currentScale);
-
-  if (selected === correctName) {
-    correct++;
-    e.target.classList.add('correct');
-    promptText.textContent = showDegrees
-      ? `Correct! ✅ The note was the ${currentMode === 8 && correctName === scaleData[currentScale].noteOrder[0] ? '1st/8th' : scaleData[currentScale].degreeMap[correctName]} scale degree`
-      : `Correct! ✅ The note was ${correctName}`;
-  } else {
-    incorrect++;
-    e.target.classList.add('incorrect');
-    const correctBtn = [...noteButtonsContainer.querySelectorAll('.blue-button')]
-      .find(btn => btn.getAttribute('data-note') === correctName);
-    if (correctBtn) correctBtn.classList.add('correct');
-    promptText.textContent = showDegrees
-      ? `Incorrect! ❌ The note was the ${currentMode === 8 && correctName === scaleData[currentScale].noteOrder[0] ? '1st/8th' : scaleData[currentScale].degreeMap[correctName]} scale degree`
-      : `Incorrect! ❌ The note played was actually ${correctName}`;
-  }
-
-  updateScore();
-  nextBtn.disabled = false;
-  [...noteButtonsContainer.querySelectorAll('.blue-button')].forEach(btn => btn.disabled = true);
-}
-
-function updateScore() {
-  const total = correct + incorrect;
-  correctCount.textContent = correct;
-  incorrectCount.textContent = incorrect;
-  totalCount.textContent = total;
-  accuracyDisplay.textContent = total ? ((correct / total) * 100).toFixed(1) + '%' : '0.0%';
-}
-
-function resetScore() {
-  correct = 0;
-  incorrect = 0;
-  updateScore();
-}
-function toggleDisplay(mode) {
-  showDegrees = mode === 'degrees';
-  updateNoteButtonLabels();
-  displayNotesBtn.classList.toggle('selected', !showDegrees);
-  displayDegreesBtn.classList.toggle('selected', showDegrees);
-  scaleLabel.textContent = scaleData[currentScale].label;
-  octaveLabel.textContent = generateNoteRangeText();
-  playRefBtn.textContent = `Play Reference (${scaleData[currentScale].noteOrder[0]} - Tonic)`;
-  promptText.textContent = 'Which note was played?';
-}
-
-function updateNoteButtonLabels() {
-  const buttons = noteButtonsContainer.querySelectorAll('.blue-button');
-  const data = scaleData[currentScale];
-
-  buttons.forEach(btn => {
-    const note = btn.getAttribute('data-note');
-    if (showDegrees) {
-      if (currentMode === 8 && note === data.noteOrder[0]) {
-        btn.textContent = '1st/8th';
-        btn.classList.add('wide-label');
-      } else {
-        btn.textContent = data.degreeMap[note];
-        btn.classList.remove('wide-label');
-      }
-    } else {
-      btn.textContent = note;
-      btn.classList.remove('wide-label');
+  function getNoteName(filename, scale) {
+    const reverseMap = {};
+    const map = scaleData[scale].noteMap;
+    for (const [name, files] of Object.entries(map)) {
+      files.forEach(file => reverseMap[file] = name);
     }
-  });
-}
+    return reverseMap[filename] || '';
+  }
 
-function updateModeButtonsState() {
-  addNoteBtn.disabled = currentMode >= 8;
-  removeNoteBtn.disabled = currentMode <= 2;
-}
+  function buildNoteButtons() {
+    noteButtonsContainer.innerHTML = '';
+    const data = scaleData[currentScale];
+    const keys = data.noteOrder.slice(0, currentMode);
+    currentNotes = keys.map(key => data.noteMap[key][0]);
+    keys.forEach(note => {
+      const btn = document.createElement('button');
+      btn.className = 'blue-button';
+      btn.setAttribute('data-note', note);
+      btn.textContent = showDegrees
+        ? (currentMode === 8 && note === data.noteOrder[0] ? '1st/8th' : data.degreeMap[note])
+        : note;
+      if (currentMode === 8 && note === data.noteOrder[0]) {
+        btn.classList.add('wide-label');
+      }
+      btn.addEventListener('click', handleAnswer);
+      noteButtonsContainer.appendChild(btn);
+    });
+  }
 
-// === Event Listeners ===
+  function loadNewNote() {
+    isAnswered = false;
+    buildNoteButtons();
+    const buttons = noteButtonsContainer.querySelectorAll('.blue-button');
+    buttons.forEach(btn => {
+      btn.disabled = false;
+      btn.classList.remove('correct', 'incorrect');
+    });
+    const candidates = [...currentNotes];
+    if (currentMode === 8 && scaleData[currentScale].noteMap[scaleData[currentScale].noteOrder[0]].length === 2) {
+      candidates.push(scaleData[currentScale].noteMap[scaleData[currentScale].noteOrder[0]][1]);
+    }
+    currentNote = candidates[Math.floor(Math.random() * candidates.length)];
+    playNote(currentNote);
+    promptText.textContent = 'Which note was played?';
+    nextBtn.disabled = true;
+    updateModeButtonsState();
+  }
 
-const modeSelectScreen = document.getElementById('mode-select-screen');
-const selectedScaleLabel = document.getElementById('selected-scale-label');
-const ToScaleSelect = document.getElementById('-to-scale-select');
+  function handleAnswer(e) {
+    if (isAnswered) return;
+    isAnswered = true;
+    const selected = e.target.getAttribute('data-note');
+    const correctName = getNoteName(currentNote, currentScale);
+    if (selected === correctName) {
+      correct++;
+      e.target.classList.add('correct');
+      promptText.textContent = showDegrees
+        ? `Correct! ✅ The note was the ${currentMode === 8 && correctName === scaleData[currentScale].noteOrder[0] ? '1st/8th' : scaleData[currentScale].degreeMap[correctName]} scale degree`
+        : `Correct! ✅ The note was ${correctName}`;
+    } else {
+      incorrect++;
+      e.target.classList.add('incorrect');
+      const correctBtn = [...noteButtonsContainer.querySelectorAll('.blue-button')]
+        .find(btn => btn.getAttribute('data-note') === correctName);
+      if (correctBtn) correctBtn.classList.add('correct');
+      promptText.textContent = showDegrees
+        ? `Incorrect! ❌ The note was the ${currentMode === 8 && correctName === scaleData[currentScale].noteOrder[0] ? '1st/8th' : scaleData[currentScale].degreeMap[correctName]} scale degree`
+        : `Incorrect! ❌ The note played was actually ${correctName}`;
+    }
+    updateScore();
+    nextBtn.disabled = false;
+    [...noteButtonsContainer.querySelectorAll('.blue-button')].forEach(btn => btn.disabled = true);
+  }
 
-document.querySelectorAll('.scale-select').forEach(btn => {
-  btn.addEventListener('click', () => {
-    currentScale = btn.getAttribute('data-scale');
-    startScreen.classList.add('hidden');
-    selectedScaleLabel.textContent = scaleData[currentScale].label;
-    modeSelectScreen.classList.remove('hidden');
-    
-    // Automatically play the selected scale's audio
-    playNote(scaleData[currentScale].scaleAudio);
-  });
-});
+  function updateScore() {
+    const total = correct + incorrect;
+    correctCount.textContent = correct;
+    incorrectCount.textContent = incorrect;
+    totalCount.textContent = total;
+    accuracyDisplay.textContent = total ? ((correct / total) * 100).toFixed(1) + '%' : '0.0%';
+  }
 
-document.querySelectorAll('.mode-button').forEach(btn => {
-  btn.addEventListener('click', () => {
-    currentMode = parseInt(btn.getAttribute('data-mode'), 10);
-    modeSelectScreen.classList.add('hidden');
-    gameScreen.classList.remove('hidden');
-    resetScore();
-    toggleDisplay('notes');
+  function resetScore() {
+    correct = 0;
+    incorrect = 0;
+    updateScore();
+  }
+
+  function toggleDisplay(mode) {
+    showDegrees = mode === 'degrees';
+    updateNoteButtonLabels();
+    displayNotesBtn.classList.toggle('selected', !showDegrees);
+    displayDegreesBtn.classList.toggle('selected', showDegrees);
     scaleLabel.textContent = scaleData[currentScale].label;
+    octaveLabel.textContent = generateNoteRangeText();
     playRefBtn.textContent = `Play Reference (${scaleData[currentScale].noteOrder[0]} - Tonic)`;
-    loadNewNote();
+    promptText.textContent = 'Which note was played?';
+  }
+
+  function updateNoteButtonLabels() {
+    const buttons = noteButtonsContainer.querySelectorAll('.blue-button');
+    const data = scaleData[currentScale];
+    buttons.forEach(btn => {
+      const note = btn.getAttribute('data-note');
+      btn.textContent = showDegrees
+        ? (currentMode === 8 && note === data.noteOrder[0] ? '1st/8th' : data.degreeMap[note])
+        : note;
+      btn.classList.toggle('wide-label', currentMode === 8 && note === data.noteOrder[0]);
+    });
+  }
+
+  function updateModeButtonsState() {
+    addNoteBtn.disabled = currentMode >= 8;
+    removeNoteBtn.disabled = currentMode <= 2;
+  }
+
+  document.querySelectorAll('.scale-select').forEach(btn => {
+    btn.addEventListener('click', () => {
+      currentScale = btn.getAttribute('data-scale');
+      startScreen.classList.add('hidden');
+      selectedScaleLabel.textContent = scaleData[currentScale].label;
+      modeSelectScreen.classList.remove('hidden');
+      playNote(scaleData[currentScale].scaleAudio);
+    });
   });
-});
 
-ToScaleSelect.addEventListener('click', () => {
-  modeSelectScreen.classList.add('hidden');
-  startScreen.classList.remove('hidden');
-});
+  document.querySelectorAll('.mode-button').forEach(btn => {
+    btn.addEventListener('click', () => {
+      currentMode = parseInt(btn.getAttribute('data-mode'), 10);
+      modeSelectScreen.classList.add('hidden');
+      gameScreen.classList.remove('hidden');
+      resetScore();
+      toggleDisplay('notes');
+      scaleLabel.textContent = scaleData[currentScale].label;
+      playRefBtn.textContent = `Play Reference (${scaleData[currentScale].noteOrder[0]} - Tonic)`;
+      loadNewNote();
+    });
+  });
 
-backButton.addEventListener('click', () => {
-  gameScreen.classList.add('hidden');
-  modeSelectScreen.classList.remove('hidden'); // Go back to mode select screen
-});
+  backToScaleSelect.addEventListener('click', () => {
+    modeSelectScreen.classList.add('hidden');
+    startScreen.classList.remove('hidden');
+  });
 
-playRefBtn.addEventListener('click', () => playNote(scaleData[currentScale].referenceNote));
-playScaleBtn.addEventListener('click', () => playNote(scaleData[currentScale].scaleAudio));
-replayNoteBtn.addEventListener('click', () => playNote(currentNote));
-nextBtn.addEventListener('click', loadNewNote);
-resetScoreBtn.addEventListener('click', resetScore);
-displayNotesBtn.addEventListener('click', () => toggleDisplay('notes'));
-displayDegreesBtn.addEventListener('click', () => toggleDisplay('degrees'));
+  backButton.addEventListener('click', () => {
+    gameScreen.classList.add('hidden');
+    modeSelectScreen.classList.remove('hidden');
+  });
 
-addNoteBtn.addEventListener('click', () => {
-  if (currentMode < 8) {
-    currentMode++;
-    resetScore();
-    toggleDisplay(showDegrees ? 'degrees' : 'notes');
-    loadNewNote();
-  }
-});
+  playRefBtn.addEventListener('click', () => playNote(scaleData[currentScale].referenceNote));
+  playScaleBtn.addEventListener('click', () => playNote(scaleData[currentScale].scaleAudio));
+  replayNoteBtn.addEventListener('click', () => playNote(currentNote));
+  nextBtn.addEventListener('click', loadNewNote);
+  resetScoreBtn.addEventListener('click', resetScore);
+  displayNotesBtn.addEventListener('click', () => toggleDisplay('notes'));
+  displayDegreesBtn.addEventListener('click', () => toggleDisplay('degrees'));
 
-removeNoteBtn.addEventListener('click', () => {
-  if (currentMode > 2) {
-    currentMode--;
-    resetScore();
-    toggleDisplay(showDegrees ? 'degrees' : 'notes');
-    loadNewNote();
-  }
-});
+  addNoteBtn.addEventListener('click', () => {
+    if (currentMode < 8) {
+      currentMode++;
+      resetScore();
+      toggleDisplay(showDegrees ? 'degrees' : 'notes');
+      loadNewNote();
+    }
+  });
+
+  removeNoteBtn.addEventListener('click', () => {
+    if (currentMode > 2) {
+      currentMode--;
+      resetScore();
+      toggleDisplay(showDegrees ? 'degrees' : 'notes');
+      loadNewNote();
+    }
+  });
 });
