@@ -260,16 +260,23 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function updateNoteButtonLabels() {
-    const buttons = noteButtonsContainer.querySelectorAll('.blue-button');
-    const data = scaleData[currentScale];
-    buttons.forEach(btn => {
-      const note = btn.getAttribute('data-note');
-      btn.textContent = showDegrees
-        ? (currentMode === 8 && note === data.noteOrder[0] ? '1st/8th' : data.degreeMap[note])
-        : note;
-btn.classList.toggle('wide-label', showDegrees && currentMode === 8 && note === data.noteOrder[0]);
-    });
-  }
+  const buttons = noteButtonsContainer.querySelectorAll('.blue-button');
+  const data = scaleData[currentScale];
+
+  buttons.forEach(btn => {
+    const note = btn.getAttribute('data-note');
+    btn.textContent = showDegrees
+      ? (currentMode === 8 && note === data.noteOrder[0] ? '1st/8th' : data.degreeMap[note])
+      : note;
+
+    btn.classList.toggle('wide-label', showDegrees && currentMode === 8 && note === data.noteOrder[0]);
+
+    // Force reflow (optional but helps in some rendering edge cases)
+    btn.style.display = 'none';
+    btn.offsetHeight; // trigger reflow
+    btn.style.display = '';
+  });
+}
 
   function updateModeButtonsState() {
     addNoteBtn.disabled = currentMode >= 8;
