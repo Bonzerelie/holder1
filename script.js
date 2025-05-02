@@ -292,8 +292,19 @@ document.querySelectorAll('.scale-select').forEach(btn => {
     resetScore();
     toggleDisplay('notes');
     scaleLabel.textContent = scaleData[currentScale].label;
-    octaveLabel.textContent = scaleData[currentScale].octave;
-    playRefBtn.textContent = `Play Reference (${scaleData[currentScale].noteOrder[0]} - Tonic)`;
+function generateNoteRangeText() {
+  const noteNames = scaleData[currentScale].noteOrder.slice(0, currentMode);
+  if (currentMode === 8 && scaleData[currentScale].noteMap[noteNames[0]].length === 2) {
+    return `One Octave (${scaleData[currentScale].octave}) — the ${noteNames[0]} button works for both notes!`;
+  }
+
+  // Format note list with commas and "and"
+  const formattedList = noteNames.length === 2
+    ? `${noteNames[0]} and ${noteNames[1]}`
+    : `${noteNames.slice(0, -1).join(', ')} and ${noteNames[noteNames.length - 1]}`;
+
+  return `Notes ${formattedList} from one octave`;
+}    playRefBtn.textContent = `Play Reference (${scaleData[currentScale].noteOrder[0]} - Tonic)`;
     loadNewNote();
   });
 });
