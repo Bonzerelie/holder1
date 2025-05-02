@@ -149,14 +149,23 @@ document.addEventListener('DOMContentLoaded', () => {
     audio.play();
   }
 
-   function updateNoteRangeDisplay() {
+  function updateNoteRangeDisplay() {
   const display = document.getElementById('note-range-display');
   const noteNames = scaleData[currentScale].noteOrder.slice(0, currentMode);
-  const firstKey = noteNames[0];
-  const lastKey = noteNames[noteNames.length - 1];
-  const firstNoteFile = scaleData[currentScale].noteMap[firstKey][0];
-  const lastNoteFile = scaleData[currentScale].noteMap[lastKey][0];
-  display.textContent = `Current note range: ${firstNoteFile.toUpperCase()}–${lastNoteFile.toUpperCase()}`;
+  const degreeMap = scaleData[currentScale].degreeMap;
+  const firstName = noteNames[0];
+  let lastName = noteNames[noteNames.length - 1];
+
+  // Handle "Entire Octave" mode with shared top note
+  if (currentMode === 8 && scaleData[currentScale].noteMap[firstName].length === 2) {
+    lastName = firstName; // Top note is same as bottom (e.g. C4 and C5 both mapped to 'C')
+  }
+
+  // Format display based on whether we're showing scale degrees or note names
+  const firstLabel = showDegrees ? degreeMap[firstName] : firstName;
+  const lastLabel = showDegrees ? degreeMap[lastName] : lastName;
+
+  display.textContent = `Current note range: ${firstLabel}–${lastLabel}`;
 }
 
   function generateNoteRangeText() {
