@@ -152,7 +152,7 @@ document.addEventListener('DOMContentLoaded', () => {
   function generateNoteRangeText() {
     const noteNames = scaleData[currentScale].noteOrder.slice(0, currentMode);
     if (currentMode === 8 && scaleData[currentScale].noteMap[noteNames[0]].length === 2) {
-      return `One Octave (${scaleData[currentScale].octave}) — the ${noteNames[0]} button works for both notes!`;
+      return `${scaleData[currentScale].octave} — the ${noteNames[0]} button works for both notes!`;
     }
     const formattedList = noteNames.length === 2
       ? `${noteNames[0]} and ${noteNames[1]}`
