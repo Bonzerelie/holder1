@@ -276,6 +276,7 @@ document.addEventListener('DOMContentLoaded', () => {
     octaveLabel.textContent = generateNoteRangeText();
     playRefBtn.textContent = `Play Reference (${scaleData[currentScale].noteOrder[0]} - Tonic)`;
     promptText.textContent = 'Which note was played?';
+    updateNoteRangeDisplay();
   }
 
   function updateNoteButtonLabels() {
@@ -321,6 +322,7 @@ document.addEventListener('DOMContentLoaded', () => {
       toggleDisplay('notes');
       scaleLabel.textContent = scaleData[currentScale].label;
       playRefBtn.textContent = `Play Reference (${scaleData[currentScale].noteOrder[0]} - Tonic)`;
+      updateNoteRangeDisplay();
       loadNewNote();
     });
   });
@@ -348,6 +350,7 @@ document.addEventListener('DOMContentLoaded', () => {
       currentMode++;
       resetScore();
       toggleDisplay(showDegrees ? 'degrees' : 'notes');
+      updateNoteRangeDisplay();
       loadNewNote();
     }
   });
@@ -357,6 +360,7 @@ document.addEventListener('DOMContentLoaded', () => {
       currentMode--;
       resetScore();
       toggleDisplay(showDegrees ? 'degrees' : 'notes');
+      updateNoteRangeDisplay();
       loadNewNote();
     }
   });
