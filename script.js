@@ -150,15 +150,20 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function generateNoteRangeText() {
-    const noteNames = scaleData[currentScale].noteOrder.slice(0, currentMode);
-    if (currentMode === 8 && scaleData[currentScale].noteMap[noteNames[0]].length === 2) {
-      return `${scaleData[currentScale].octave} — the ${noteNames[0]} button works for both notes!`;
-    }
-    const formattedList = noteNames.length === 2
-      ? `${noteNames[0]} and ${noteNames[1]}`
-      : `${noteNames.slice(0, -1).join(', ')} and ${noteNames[noteNames.length - 1]}`;
-    return `Notes ${formattedList} from one octave`;
+  const noteNames = scaleData[currentScale].noteOrder.slice(0, currentMode);
+  const noteKey = noteNames[0];
+  const associatedNotes = scaleData[currentScale].noteMap[noteKey];
+
+  if (currentMode === 8 && associatedNotes.length === 2) {
+    const [note1, note2] = associatedNotes;
+    return `${scaleData[currentScale].octave} — the ${noteKey} button works for both ${note1.toUpperCase()} and ${note2.toUpperCase()}!`;
   }
+
+  const formattedList = noteNames.length === 2
+    ? `${noteNames[0]} and ${noteNames[1]}`
+    : `${noteNames.slice(0, -1).join(', ')} and ${noteNames[noteNames.length - 1]}`;
+  return `Notes ${formattedList} from one octave`;
+}
 
   function getNoteName(filename, scale) {
     const reverseMap = {};
