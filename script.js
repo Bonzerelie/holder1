@@ -162,13 +162,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const formattedList = noteNames.length === 2
     ? `${noteNames[0]} and ${noteNames[1]}`
     : `${noteNames.slice(0, -1).join(', ')} and ${noteNames[noteNames.length - 1]}`;
-
-  return `Notes ${formattedList} from one octave`;
-}
-
-  const formattedList = noteNames.length === 2
-    ? `${noteNames[0]} and ${noteNames[1]}`
-    : `${noteNames.slice(0, -1).join(', ')} and ${noteNames[noteNames.length - 1]}`;
   return `Notes ${formattedList} from one octave`;
 }
 
