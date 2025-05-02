@@ -162,3 +162,6 @@ body {
   margin: 6px 0; /* Adds vertical spacing between mode buttons */
 }
 
+.scale-select {
+  margin: 6px 0; /* Add vertical spacing */
+}
