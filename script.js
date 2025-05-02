@@ -1,5 +1,3 @@
-// Part 1: Setup and scaleData
-
 document.addEventListener('DOMContentLoaded', () => {
   const startScreen = document.getElementById('main-menu');
   const modeSelectScreen = document.getElementById('mode-select-screen');
@@ -24,7 +22,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const addNoteBtn = document.getElementById('add-note');
   const removeNoteBtn = document.getElementById('remove-note');
   const selectedScaleLabel = document.getElementById('selected-scale-label');
-  const noteRangeLabel = document.getElementById('note-range-label');
 
   let audio = new Audio();
   let correct = 0;
@@ -55,7 +52,6 @@ document.addEventListener('DOMContentLoaded', () => {
       label: 'G Major Scale (Ionian Mode)',
       octave: 'Notes G3–G4'
     },
-
     "D": {
       noteMap: { "D": ['d3', 'd4'], "E": ['e3'], "F#": ['f#3'], "G": ['g3'], "A": ['a3'], "B": ['b3'], "C#": ['c#4'] },
       degreeMap: { "D": '1st', "E": '2nd', "F#": '3rd', "G": '4th', "A": '5th', "B": '6th', "C#": '7th' },
@@ -147,11 +143,6 @@ document.addEventListener('DOMContentLoaded', () => {
       octave: 'Notes C#3–C#4'
     }
   };
- ... (complete scaleData from previous section) ...
-
-// Full JavaScript for the Relative Pitch Game with all mechanics and dynamic note range label
-
-// ... (complete scaleData from previous section) ...
 
   function playNote(noteFile) {
     audio.src = `audio/${encodeURIComponent(noteFile)}.mp3`;
@@ -159,29 +150,20 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function generateNoteRangeText() {
-    const noteNames = scaleData[currentScale].noteOrder.slice(0, currentMode);
-    const noteKey = noteNames[0];
-    const associatedNotes = scaleData[currentScale].noteMap[noteKey];
+  const noteNames = scaleData[currentScale].noteOrder.slice(0, currentMode);
+  const noteKey = noteNames[0];
+  const associatedNotes = scaleData[currentScale].noteMap[noteKey];
 
-    if (currentMode === 8 && associatedNotes.length === 2) {
-      const [note1, note2] = associatedNotes;
-      return `${scaleData[currentScale].octave} — the ${noteKey} button works for both ${note1.toUpperCase()} and ${note2.toUpperCase()}!`;
-    }
-
-    const formattedList = noteNames.length === 2
-      ? `${noteNames[0]} and ${noteNames[1]}`
-      : `${noteNames.slice(0, -1).join(', ')} and ${noteNames[noteNames.length - 1]}`;
-    return `Notes ${formattedList} from one octave`;
+  if (currentMode === 8 && associatedNotes.length === 2) {
+    const [note1, note2] = associatedNotes;
+    return `${scaleData[currentScale].octave} — the ${noteKey} button works for both ${note1.toUpperCase()} and ${note2.toUpperCase()}!`;
   }
 
-  function updateNoteRangeLabel() {
-    const noteNames = scaleData[currentScale].noteOrder.slice(0, currentMode);
-    const startNoteKey = noteNames[0];
-    const endNoteKey = noteNames[noteNames.length - 1];
-    const startNote = scaleData[currentScale].noteMap[startNoteKey][0];
-    const endNote = scaleData[currentScale].noteMap[endNoteKey].slice(-1)[0];
-    noteRangeLabel.textContent = `Current note range: ${startNote.toUpperCase()}–${endNote.toUpperCase()}`;
-  }
+  const formattedList = noteNames.length === 2
+    ? `${noteNames[0]} and ${noteNames[1]}`
+    : `${noteNames.slice(0, -1).join(', ')} and ${noteNames[noteNames.length - 1]}`;
+  return `Notes ${formattedList} from one octave`;
+}
 
   function getNoteName(filename, scale) {
     const reverseMap = {};
@@ -205,11 +187,14 @@ document.addEventListener('DOMContentLoaded', () => {
         ? (currentMode === 8 && note === data.noteOrder[0] ? '1st/8th' : data.degreeMap[note])
         : note;
       if (currentMode === 8 && showDegrees && note === data.noteOrder[0]) {
-        btn.classList.add('wide-label');
+  btn.classList.add('wide-label');
       }
       btn.addEventListener('click', handleAnswer);
       noteButtonsContainer.appendChild(btn);
     });
+    if (currentMode === 8 && showDegrees && note === data.noteOrder[0]) {
+  btn.classList.add('wide-label');
+}
   }
 
   function loadNewNote() {
@@ -283,17 +268,23 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function updateNoteButtonLabels() {
-    const buttons = noteButtonsContainer.querySelectorAll('.blue-button');
-    const data = scaleData[currentScale];
+  const buttons = noteButtonsContainer.querySelectorAll('.blue-button');
+  const data = scaleData[currentScale];
 
-    buttons.forEach(btn => {
-      const note = btn.getAttribute('data-note');
-      btn.textContent = showDegrees
-        ? (currentMode === 8 && note === data.noteOrder[0] ? '1st/8th' : data.degreeMap[note])
-        : note;
-      btn.classList.toggle('wide-label', showDegrees && currentMode === 8 && note === data.noteOrder[0]);
-    });
-  }
+  buttons.forEach(btn => {
+    const note = btn.getAttribute('data-note');
+    btn.textContent = showDegrees
+      ? (currentMode === 8 && note === data.noteOrder[0] ? '1st/8th' : data.degreeMap[note])
+      : note;
+
+    btn.classList.toggle('wide-label', showDegrees && currentMode === 8 && note === data.noteOrder[0]);
+
+    // Force reflow (optional but helps in some rendering edge cases)
+    btn.style.display = 'none';
+    btn.offsetHeight; // trigger reflow
+    btn.style.display = '';
+  });
+}
 
   function updateModeButtonsState() {
     addNoteBtn.disabled = currentMode >= 8;
@@ -317,7 +308,6 @@ document.addEventListener('DOMContentLoaded', () => {
       gameScreen.classList.remove('hidden');
       resetScore();
       toggleDisplay('notes');
-      updateNoteRangeLabel();
       scaleLabel.textContent = scaleData[currentScale].label;
       playRefBtn.textContent = `Play Reference (${scaleData[currentScale].noteOrder[0]} - Tonic)`;
       loadNewNote();
@@ -348,7 +338,6 @@ document.addEventListener('DOMContentLoaded', () => {
       resetScore();
       toggleDisplay(showDegrees ? 'degrees' : 'notes');
       loadNewNote();
-      updateNoteRangeLabel();
     }
   });
 
@@ -358,7 +347,6 @@ document.addEventListener('DOMContentLoaded', () => {
       resetScore();
       toggleDisplay(showDegrees ? 'degrees' : 'notes');
       loadNewNote();
-      updateNoteRangeLabel();
     }
   });
 });
