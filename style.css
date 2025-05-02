@@ -165,3 +165,8 @@ body {
 .scale-select {
   margin: 6px 0; /* Add vertical spacing */
 }
+
+.game-title {
+  margin-top: 0;
+  margin-bottom: 10px;
+}
