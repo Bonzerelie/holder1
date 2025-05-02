@@ -149,12 +149,7 @@ document.addEventListener('DOMContentLoaded', () => {
     audio.play();
   }
 
-  function generateNoteRangeText() {
-  const noteNames = scaleData[currentScale].noteOrder.slice(0, currentMode);
-  const noteKey = noteNames[0];
-  const associatedNotes = scaleData[currentScale].noteMap[noteKey];
-
-    function updateNoteRangeDisplay() {
+   function updateNoteRangeDisplay() {
   const display = document.getElementById('note-range-display');
   const noteNames = scaleData[currentScale].noteOrder.slice(0, currentMode);
   const firstKey = noteNames[0];
@@ -163,6 +158,11 @@ document.addEventListener('DOMContentLoaded', () => {
   const lastNoteFile = scaleData[currentScale].noteMap[lastKey][0];
   display.textContent = `Current note range: ${firstNoteFile.toUpperCase()}–${lastNoteFile.toUpperCase()}`;
 }
+
+  function generateNoteRangeText() {
+  const noteNames = scaleData[currentScale].noteOrder.slice(0, currentMode);
+  const noteKey = noteNames[0];
+  const associatedNotes = scaleData[currentScale].noteMap[noteKey];
 
 
   if (currentMode === 8 && associatedNotes.length === 2) {
