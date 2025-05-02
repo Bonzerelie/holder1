@@ -253,6 +253,10 @@ function toggleDisplay(mode) {
   updateNoteButtonLabels();
   displayNotesBtn.classList.toggle('selected', !showDegrees);
   displayDegreesBtn.classList.toggle('selected', showDegrees);
+  scaleLabel.textContent = scaleData[currentScale].label;
+  octaveLabel.textContent = generateNoteRangeText();
+  playRefBtn.textContent = `Play Reference (${scaleData[currentScale].noteOrder[0]} - Tonic)`;
+  promptText.textContent = 'Which note was played?';
 }
 
 function updateNoteButtonLabels() {
