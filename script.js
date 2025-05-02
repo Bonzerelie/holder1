@@ -336,7 +336,7 @@ ToScaleSelect.addEventListener('click', () => {
 
 backButton.addEventListener('click', () => {
   gameScreen.classList.add('hidden');
-  modeselectScreen.classList.remove('hidden');
+  modeSelectScreen.classList.remove('hidden');
 });
 
 playRefBtn.addEventListener('click', () => playNote(scaleData[currentScale].referenceNote));
