@@ -310,6 +310,9 @@ document.querySelectorAll('.scale-select').forEach(btn => {
     startScreen.classList.add('hidden');
     selectedScaleLabel.textContent = scaleData[currentScale].label;
     modeSelectScreen.classList.remove('hidden');
+    
+    // Automatically play the selected scale's audio
+    playNote(scaleData[currentScale].scaleAudio);
   });
 });
 
