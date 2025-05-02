@@ -300,18 +300,35 @@ function updateModeButtonsState() {
 
 // === Event Listeners ===
 
+const modeSelectScreen = document.getElementById('mode-select-screen');
+const selectedScaleLabel = document.getElementById('selected-scale-label');
+const backToScaleSelect = document.getElementById('back-to-scale-select');
+
 document.querySelectorAll('.scale-select').forEach(btn => {
   btn.addEventListener('click', () => {
     currentScale = btn.getAttribute('data-scale');
     startScreen.classList.add('hidden');
+    selectedScaleLabel.textContent = scaleData[currentScale].label;
+    modeSelectScreen.classList.remove('hidden');
+  });
+});
+
+document.querySelectorAll('.mode-button').forEach(btn => {
+  btn.addEventListener('click', () => {
+    currentMode = parseInt(btn.getAttribute('data-mode'), 10);
+    modeSelectScreen.classList.add('hidden');
     gameScreen.classList.remove('hidden');
-    currentMode = 8;
     resetScore();
     toggleDisplay('notes');
     scaleLabel.textContent = scaleData[currentScale].label;
     playRefBtn.textContent = `Play Reference (${scaleData[currentScale].noteOrder[0]} - Tonic)`;
     loadNewNote();
   });
+});
+
+backToScaleSelect.addEventListener('click', () => {
+  modeSelectScreen.classList.add('hidden');
+  startScreen.classList.remove('hidden');
 });
 
 backButton.addEventListener('click', () => {
