@@ -44,7 +44,7 @@ document.addEventListener('DOMContentLoaded', () => {
       octave: 'One Octave (Notes C4–C5)'
     },
     "G": {
-      noteMap: { "G": ['g3'], "A": ['a3'], "B": ['b3'], "C": ['c4'], "D": ['d4'], "E": ['e4'], "F#": ['f#4'] },
+      noteMap: { "G": ['g3', 'g4'], "A": ['a3'], "B": ['b3'], "C": ['c4'], "D": ['d4'], "E": ['e4'], "F#": ['f#4'] },
       degreeMap: { "G": '1st', "A": '2nd', "B": '3rd', "C": '4th', "D": '5th', "E": '6th', "F#": '7th' },
       noteOrder: ["G", "A", "B", "C", "D", "E", "F#"],
       referenceNote: 'g3',
