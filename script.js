@@ -181,12 +181,15 @@ document.addEventListener('DOMContentLoaded', () => {
       btn.textContent = showDegrees
         ? (currentMode === 8 && note === data.noteOrder[0] ? '1st/8th' : data.degreeMap[note])
         : note;
-      if (currentMode === 8 && note === data.noteOrder[0]) {
-        btn.classList.add('wide-label');
+      if (currentMode === 8 && showDegrees && note === data.noteOrder[0]) {
+  btn.classList.add('wide-label');
       }
       btn.addEventListener('click', handleAnswer);
       noteButtonsContainer.appendChild(btn);
     });
+    if (currentMode === 8 && showDegrees && note === data.noteOrder[0]) {
+  btn.classList.add('wide-label');
+}
   }
 
   function loadNewNote() {
